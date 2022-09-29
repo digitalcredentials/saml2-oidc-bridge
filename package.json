@@ -25,6 +25,7 @@
   "devDependencies": {
     "@rdfjs/types": "^1.1.0",
     "@types/jest": "^29.0.3",
+    "@types/oidc-provider": "^7.12.0",
     "@typescript-eslint/eslint-plugin": "^5.38.1",
     "@typescript-eslint/parser": "^5.38.1",
     "eslint": "^8.24.0",
@@ -37,5 +38,8 @@
     "typedoc": "^0.23.15",
     "typedoc-plugin-markdown": "^3.13.6",
     "typescript": "^4.8.3"
+  },
+  "dependencies": {
+    "oidc-provider": "^7.12.0"
   }
 }
