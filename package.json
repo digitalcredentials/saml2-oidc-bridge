@@ -2,11 +2,14 @@
   "name": "saml2-oidc-bridge",
   "version": "1.0.0",
   "description": "A bridge from Saml2 systems to log into OIDC systems",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "bin": {
+    "saml2-oidc-bridge": "./dist/index.js"
+  },
   "scripts": {
-    "start": "node dist/saml.js",
+    "start": "node dist/index.js start -c example-config/mcmaster-config.json",
     "build": "tsc",
-    "dev": "ts-node lib/saml.ts",
+    "dev": "npm run build && npm run start",
     "watch": "tsc --watch",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
@@ -25,6 +28,7 @@
   "homepage": "https://github.com/digitalcredentials/saml2-oidc-bridge#readme",
   "devDependencies": {
     "@rdfjs/types": "^1.1.0",
+    "@types/fs-extra": "^9.0.13",
     "@types/jest": "^29.0.3",
     "@types/oidc-provider": "^7.12.0",
     "@types/saml2-js": "^3.0.1",
@@ -42,7 +46,9 @@
     "typescript": "^4.8.3"
   },
   "dependencies": {
+    "commander": "^9.4.1",
     "express": "^4.18.2",
+    "fs-extra": "^10.1.0",
     "oidc-provider": "^7.12.0",
     "saml2-js": "^4.0.0"
   }
