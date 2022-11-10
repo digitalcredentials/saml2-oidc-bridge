@@ -104,5 +104,6 @@ dist
 .tern-port
 
 # CERTS
-key-file.pem
-cert-file.crt
+*.pem
+*.crt
+*/mcmaster-config.json
