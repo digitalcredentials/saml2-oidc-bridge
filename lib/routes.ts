@@ -1,6 +1,9 @@
-import { Express, NextFunction, Request, Response } from "express";
+import { urlencoded, Express, NextFunction, Request, Response } from "express";
 import { Provider } from "oidc-provider";
-import preLoginHandler from "./handlers/preLoginHandler";
+import IConfiguration from "./configuration/IConfiguration";
+import preLoginHandler, { beginSamlLogin } from "./handlers/preLoginHandler";
+
+const body = urlencoded({ extended: false });
 
 function setNoCache(req: Request, res: Response, next: NextFunction) {
   res.set("cache-control", "no-store");
@@ -9,11 +12,11 @@ function setNoCache(req: Request, res: Response, next: NextFunction) {
 
 export default async function routes(
   app: Express,
-  provider: Provider
+  provider: Provider,
+  config: IConfiguration
 ): Promise<void> {
-  app.get("/interaction/:uid", setNoCache, async (req, res, next) => {
+  app.get("/interaction/:uid", setNoCache, async (req, res) => {
     const interaction = await provider.interactionDetails(req, res);
-    console.log(JSON.stringify(interaction, null, 2));
 
     // const client = await provider.Client.find(
     //   interaction.params.client_id as string
@@ -21,7 +24,7 @@ export default async function routes(
 
     switch (interaction.prompt.name) {
       case "login": {
-        await preLoginHandler(interaction, res);
+        await preLoginHandler(interaction, res, config);
       }
       // case "consent": {
       //   return res.render("interaction", {
@@ -41,6 +44,16 @@ export default async function routes(
         return undefined;
     }
   });
+
+  app.post(
+    "/interaction/:uid/select-idp",
+    setNoCache,
+    body,
+    async (req, res) => {
+      const idpName = req.body.idp;
+      await beginSamlLogin(idpName, res, config);
+    }
+  );
 
   // app.post(
   //   "/interaction/:uid/login",

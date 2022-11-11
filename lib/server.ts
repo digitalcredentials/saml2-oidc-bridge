@@ -28,7 +28,7 @@ export async function startServer(inputOptions: StartServerOptions) {
     })
   );
 
-  app.set("views", path.join(__dirname, "views"));
+  app.set("views", path.join(__dirname, "../views"));
   app.set("view engine", "ejs");
 
   const morganMiddleware = morgan(
@@ -41,7 +41,7 @@ export async function startServer(inputOptions: StartServerOptions) {
   );
   app.use(morganMiddleware);
 
-  routes(app, provider);
+  routes(app, provider, config);
   app.use(provider.callback());
 
   app.listen(config.port, () => {
