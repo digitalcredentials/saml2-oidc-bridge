@@ -13,22 +13,31 @@ export default async function getConfigurationFromFile(
 
   config.baseUrl = config.baseUrl || "http://localhost:3000";
   config.port = config.port || "3000";
-  config.clients = config.clients || [];
-  config.samlIdps = config.samlIdps || [];
+  config.oidc.clients = config.oidc.clients || [];
+  config.saml.idps = config.saml.idps || [];
 
   await Promise.all([
     (async () => {
-      config.samlPrivateKey = (
-        await fs.readFile(pathUtil.join(baseDir, config.samlPrivateKey))
+      config.saml.privateKey = (
+        await fs.readFile(pathUtil.join(baseDir, config.saml.privateKey))
       ).toString();
     })(),
     (async () => {
-      config.samlCert = (
-        await fs.readFile(pathUtil.join(baseDir, config.samlCert))
+      config.saml.cert = (
+        await fs.readFile(pathUtil.join(baseDir, config.saml.cert))
       ).toString();
     })(),
+    (async () => {
+      config.oidc.jwks = JSON.parse(
+        (
+          await fs.readFile(
+            pathUtil.join(baseDir, config.oidc.jwks as unknown as string)
+          )
+        ).toString()
+      );
+    })(),
     Promise.all(
-      config.samlIdps.map(async (samlIdp) => {
+      config.saml.idps.map(async (samlIdp) => {
         samlIdp.certificates = Array.isArray(samlIdp.certificates)
           ? samlIdp.certificates
           : [samlIdp.certificates];
