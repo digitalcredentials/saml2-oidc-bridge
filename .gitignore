@@ -107,3 +107,4 @@ dist
 *.pem
 *.crt
 */mcmaster-config.json
+*/jwks.json

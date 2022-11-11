@@ -1,14 +1,21 @@
-import { ClientMetadata } from "oidc-provider";
+import { ClientMetadata, JWKS } from "oidc-provider";
 import { IdentityProviderOptions } from "saml2-js";
 
 export default interface IConfiguration {
   baseUrl: string;
   port: string;
-  samlPrivateKey: string;
-  samlCert: string;
-  clients: ClientMetadata[];
-  samlIdps: (IdentityProviderOptions & {
-    name: string;
-    displayName: string;
-  })[];
+  logFile?: string;
+  saml: {
+    privateKey: string;
+    cert: string;
+    idps: (IdentityProviderOptions & {
+      name: string;
+      displayName: string;
+    })[];
+  };
+  oidc: {
+    clients: ClientMetadata[];
+    cookieKeys: string[];
+    jwks: JWKS;
+  };
 }
