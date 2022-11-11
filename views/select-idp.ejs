@@ -1,0 +1,43 @@
+<html>
+<head>
+  <title>Select an identity provider</title>
+  <style>
+    body {
+      background-color:#E4E9F2;
+      display: flex;
+      justify-content: center;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .menuContainer {
+      width: 300px;
+    }
+    .buttonContainer {
+      margin-top: 16px;
+      margin-bottom: 16px;
+    }
+    .button {
+      background-color: #3366FF;
+      height: 48px;
+      width: 100%;
+      border: 0;
+      border-radius: 24px;
+      cursor: pointer;
+      color: #FFF;
+    }
+  </style>
+</head>
+<body>
+  <div class="menuContainer">
+    <h1>Select an Identity Provider</h1>
+    <form method="post" action="/interaction/<%= uid %>/select-idp">
+      <% idps.forEach(function(idp) { %>
+        <div class="buttonContainer">
+          <button class="button" name="idp" type="submit" value="<%= idp.name %>">
+            <%= idp.displayName %>
+          </button>
+        </div>
+      <% }); %>
+    </form>
+  </div>
+</body>
+</html>
