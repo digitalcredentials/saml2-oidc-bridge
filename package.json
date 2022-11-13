@@ -28,6 +28,7 @@
   "homepage": "https://github.com/digitalcredentials/saml2-oidc-bridge#readme",
   "devDependencies": {
     "@rdfjs/types": "^1.1.0",
+    "@types/express-session": "^1.17.5",
     "@types/fs-extra": "^9.0.13",
     "@types/jest": "^29.0.3",
     "@types/morgan": "^1.9.3",
@@ -49,6 +50,7 @@
   "dependencies": {
     "commander": "^9.4.1",
     "express": "^5.0.0-beta.1",
+    "express-session": "^1.17.3",
     "fs-extra": "^10.1.0",
     "helmet": "^6.0.0",
     "morgan": "^1.10.0",

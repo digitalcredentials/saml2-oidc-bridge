@@ -2,8 +2,9 @@ import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
+import session from "express-session";
+import createContext from "./configuration/createContext";
 import getConfigurationFromFile from "./configuration/getConfigurationFromFile";
-import createOidcProvider from "./oidcProvider";
 import routes from "./routes";
 import logger from "./util/logger";
 
@@ -14,7 +15,9 @@ interface StartServerOptions {
 export async function startServer(inputOptions: StartServerOptions) {
   const app = express();
   const config = await getConfigurationFromFile(inputOptions.config);
-  const provider = createOidcProvider(config);
+  const context = createContext(config);
+
+  app.enable("trust proxy");
 
   // Set up server
   const directives = helmet.contentSecurityPolicy.getDefaultDirectives();
@@ -25,6 +28,16 @@ export async function startServer(inputOptions: StartServerOptions) {
         useDefaults: false,
         directives,
       },
+    })
+  );
+
+  app.use(
+    session({
+      proxy: true,
+      secret: context.config.oidc.cookieKeys,
+      resave: false,
+      saveUninitialized: true,
+      cookie: { secure: true },
     })
   );
 
@@ -41,8 +54,8 @@ export async function startServer(inputOptions: StartServerOptions) {
   );
   app.use(morganMiddleware);
 
-  routes(app, provider, config);
-  app.use(provider.callback());
+  routes(app, context);
+  app.use(context.provider.callback());
 
   app.listen(config.port, () => {
     console.log(
