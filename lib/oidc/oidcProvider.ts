@@ -1,8 +1,8 @@
 import { Provider } from "oidc-provider";
-import IConfiguration from "./configuration/IConfiguration";
+import IConfiguration from "../configuration/IConfiguration";
 
 export default function createOidcProvider(config: IConfiguration) {
-  return new Provider(config.baseUrl, {
+  const provider = new Provider(config.baseUrl, {
     clients: config.oidc.clients,
     interactions: {
       url(ctx, interactions) {
@@ -20,4 +20,6 @@ export default function createOidcProvider(config: IConfiguration) {
     jwks: config.oidc.jwks,
     extraParams: ["provider"],
   });
+  provider.proxy = true;
+  return provider;
 }
