@@ -1,6 +1,7 @@
 import { urlencoded, Express, NextFunction, Request, Response } from "express";
 import IContext from "./configuration/IContext";
-import postLoginHandler from "./handlers/postLoginHandler";
+import { consentHandler, renderConsentUi } from "./handlers/consentHandler";
+import postLoginHandler, { loginHandler } from "./handlers/postLoginHandler";
 import preLoginHandler, { beginSamlLogin } from "./handlers/preLoginHandler";
 
 const body = urlencoded({ extended: false });
@@ -19,6 +20,11 @@ export default async function routes(
     switch (interaction.prompt.name) {
       case "login": {
         await preLoginHandler(req, res, interaction, context);
+        return;
+      }
+      case "consent": {
+        await renderConsentUi(res, interaction);
+        return;
       }
       default:
         return undefined;
@@ -31,13 +37,33 @@ export default async function routes(
     body,
     async (req, res) => {
       const interaction = await context.provider.interactionDetails(req, res);
-      const idpName = req.body.idp;
-      await beginSamlLogin(idpName, req, res, interaction, context);
+      // const idpName = req.body.idp;
+      // await beginSamlLogin(idpName, req, res, interaction, context);
+      console.log("Return to");
+      console.log(interaction.returnTo);
+      await context.provider.interactionFinished(req, res, {
+        accoundId: "yolo",
+      });
     }
   );
 
+  app.post("/interaction/:uid/consent", async (req, res) => {
+    await consentHandler(req, res, context);
+  });
+
   app.post("/assert", body, async (req, res) => {
     await postLoginHandler(req, res, context);
+  });
+
+  app.get("/interaction/:uid/login", async (req, res) => {
+    const interaction = await context.provider.interactionDetails(req, res);
+    res.render("test", {
+      uid: interaction.uid,
+    });
+  });
+
+  app.post("/interaction/:uid/login", setNoCache, async (req, res) => {
+    await loginHandler(req, res, context);
   });
 
   app.get("/metadata.xml", function (req, res) {
