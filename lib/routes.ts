@@ -1,5 +1,9 @@
 import { urlencoded, Express, NextFunction, Request, Response } from "express";
 import IContext from "./configuration/IContext";
+<<<<<<< HEAD
+=======
+import { consentHandler, renderConsentUi } from "./handlers/consentHandler";
+>>>>>>> 35fb126 (No idea why it's not redirecting properly)
 import postLoginHandler, { loginHandler } from "./handlers/postLoginHandler";
 import preLoginHandler, { beginSamlLogin } from "./handlers/preLoginHandler";
 
@@ -32,10 +36,19 @@ export default async function routes(
     body,
     async (req, res) => {
       const interaction = await context.provider.interactionDetails(req, res);
-      const idpName = req.body.idp;
-      await beginSamlLogin(idpName, req, res, interaction, context);
+      // const idpName = req.body.idp;
+      // await beginSamlLogin(idpName, req, res, interaction, context);
+      console.log("Return to");
+      console.log(interaction.returnTo);
+      await context.provider.interactionFinished(req, res, {
+        accoundId: "yolo",
+      });
     }
   );
+
+  app.post("/interaction/:uid/consent", async (req, res) => {
+    await consentHandler(req, res, context);
+  });
 
   app.post("/assert", body, async (req, res) => {
     await postLoginHandler(req, res, context);
