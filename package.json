@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node dist/index.js start -c example-config/mcmaster-config.json",
     "build": "tsc",
-    "dev": "npm run build && npm run start",
+    "dev": "ts-node lib/index.ts start -c example-config/mcmaster-config.json",
     "watch": "tsc --watch",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
@@ -31,9 +31,11 @@
     "@types/express-session": "^1.17.5",
     "@types/fs-extra": "^9.0.13",
     "@types/jest": "^29.0.3",
+    "@types/lodash": "^4.14.188",
     "@types/morgan": "^1.9.3",
     "@types/oidc-provider": "^7.12.0",
     "@types/saml2-js": "^3.0.1",
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.38.1",
     "@typescript-eslint/parser": "^5.38.1",
     "eslint": "^8.24.0",
@@ -53,9 +55,12 @@
     "express-session": "^1.17.3",
     "fs-extra": "^10.1.0",
     "helmet": "^6.0.0",
+    "ioredis": "^5.2.4",
+    "lodash": "^4.17.21",
     "morgan": "^1.10.0",
     "oidc-provider": "^7.12.0",
     "saml2-js": "^4.0.0",
+    "uuid": "^9.0.0",
     "winston": "^3.8.2"
   }
 }

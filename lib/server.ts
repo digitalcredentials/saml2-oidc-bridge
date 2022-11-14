@@ -34,7 +34,7 @@ export async function startServer(inputOptions: StartServerOptions) {
   app.use(
     session({
       proxy: true,
-      secret: context.config.oidc.cookieKeys,
+      secret: "some secret TODO Replace",
       resave: false,
       saveUninitialized: true,
       cookie: { secure: true },
@@ -55,7 +55,10 @@ export async function startServer(inputOptions: StartServerOptions) {
   app.use(morganMiddleware);
 
   routes(app, context);
-  app.use(context.provider.callback());
+  const callback = context.provider.callback()
+  app.use((req, res) => {
+    callback(req, res);
+  });
 
   app.listen(config.port, () => {
     console.log(

@@ -1,8 +1,12 @@
 import { Provider } from "oidc-provider";
 import IConfiguration from "../configuration/IConfiguration";
+import { findOidcAccount } from "./OidcAccount";
+import RedisAdapter from "./redisOidcAdapter";
 
 export default function createOidcProvider(config: IConfiguration) {
   const provider = new Provider(config.baseUrl, {
+    findAccount: findOidcAccount,
+    adapter: RedisAdapter,
     clients: config.oidc.clients,
     interactions: {
       url(ctx, interactions) {

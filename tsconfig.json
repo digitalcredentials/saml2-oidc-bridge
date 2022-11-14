@@ -10,5 +10,11 @@
     "typeRoots": ["@types", "./node_modules/@types", "./lib/types"],
     "resolveJsonModule": true,
   },
+  "files": [
+    "lib/index.ts",
+  ],
+  "ts-node": {
+    "files": true,
+  },
   "include": ["./lib/**/*"]
 }
