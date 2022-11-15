@@ -1,4 +1,5 @@
 import "express-session";
+import { IOidcClaims } from "../util/samlResultToOidcClaim";
 
 declare module "express-session" {
   interface SessionData {
@@ -7,6 +8,7 @@ declare module "express-session" {
       shouldHandleOidcRedirect: boolean;
       nameId: string;
       sessionIndex?: string;
+      claims: IOidcClaims;
     };
   }
 }

@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import IContext from "../configuration/IContext";
+import { setAccountClaims } from "../oidc/redisOidcAdapter";
+import samlToOidcClaim from "../util/samlResultToOidcClaim";
 
 export default async function postLoginHandler(
   req: Request,
@@ -37,10 +39,12 @@ export default async function postLoginHandler(
 
         const nameId = saml_response.user.name_id;
         const sessionIndex = saml_response.user.session_index;
+
         req.session.samlLogin = {
           nameId,
           sessionIndex,
           shouldHandleOidcRedirect: true,
+          claims: samlToOidcClaim(saml_response.user),
         };
 
         res.redirect(`/interaction/${uid}/login`);
@@ -67,14 +71,18 @@ export async function loginHandler(
     throw new Error("Must have an idp name to log in");
   }
   req.session.samlLogin.shouldHandleOidcRedirect = false;
-  await context.provider.interactionFinished(
-    req,
-    res,
-    {
-      login: {
-        accountId: req.session.samlLogin.nameId,
+  const accountId = `${req.session.idpName}:${req.session.samlLogin.nameId}`;
+  await Promise.all([
+    setAccountClaims(accountId, req.session.samlLogin.claims || {}),
+    context.provider.interactionFinished(
+      req,
+      res,
+      {
+        login: {
+          accountId: accountId,
+        },
       },
-    },
-    { mergeWithLastSubmission: false }
-  );
+      { mergeWithLastSubmission: false }
+    ),
+  ]);
 }

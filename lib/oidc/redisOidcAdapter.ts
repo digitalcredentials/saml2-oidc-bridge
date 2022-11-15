@@ -1,9 +1,10 @@
 import Redis from "ioredis";
 import isEmpty from "lodash/isEmpty";
 import { Adapter, AdapterPayload } from "oidc-provider";
+import { IOidcClaims } from "../util/samlResultToOidcClaim";
 
 // TODO: Make this in config
-const client = new Redis(6379, "127.0.0.1", { keyPrefix: "oidc:" });
+export const client = new Redis(6379, "127.0.0.1", { keyPrefix: "oidc:" });
 
 const grantable = new Set([
   "AccessToken",
@@ -30,6 +31,10 @@ function userCodeKeyFor(userCode: string) {
 
 function uidKeyFor(uid: string) {
   return `uid:${uid}`;
+}
+
+function claimKeyFor(accountId: string) {
+  return `claims:${accountId}`;
 }
 
 export default class RedisAdapter implements Adapter {
@@ -140,4 +145,19 @@ export default class RedisAdapter implements Adapter {
   key(id: string) {
     return `${this.name}:${id}`;
   }
+}
+
+export async function setAccountClaims(
+  accountId: string,
+  claims: IOidcClaims
+): Promise<void> {
+  await client.set(claimKeyFor(accountId), JSON.stringify(claims));
+}
+
+export async function getAccountClaims(
+  accountId: string
+): Promise<IOidcClaims | undefined> {
+  const val = await client.get(claimKeyFor(accountId));
+  if (!val) return undefined;
+  return JSON.parse(val);
 }
