@@ -1,6 +1,5 @@
 import { urlencoded, Express, NextFunction, Request, Response } from "express";
 import IContext from "./configuration/IContext";
-import { consentHandler, renderConsentUi } from "./handlers/consentHandler";
 import postLoginHandler, { loginHandler } from "./handlers/postLoginHandler";
 import preLoginHandler, { beginSamlLogin } from "./handlers/preLoginHandler";
 
@@ -22,10 +21,6 @@ export default async function routes(
         await preLoginHandler(req, res, interaction, context);
         return;
       }
-      case "consent": {
-        await renderConsentUi(res, interaction);
-        return;
-      }
       default:
         return undefined;
     }
@@ -37,29 +32,17 @@ export default async function routes(
     body,
     async (req, res) => {
       const interaction = await context.provider.interactionDetails(req, res);
-      // const idpName = req.body.idp;
-      // await beginSamlLogin(idpName, req, res, interaction, context);
-      console.log("Return to");
-      console.log(interaction.returnTo);
-      await context.provider.interactionFinished(req, res, {
-        accoundId: "yolo",
-      });
+      const idpName = req.body.idp;
+      await beginSamlLogin(idpName, req, res, interaction, context);
     }
   );
-
-  app.post("/interaction/:uid/consent", async (req, res) => {
-    await consentHandler(req, res, context);
-  });
 
   app.post("/assert", body, async (req, res) => {
     await postLoginHandler(req, res, context);
   });
 
   app.get("/interaction/:uid/login", async (req, res) => {
-    const interaction = await context.provider.interactionDetails(req, res);
-    res.render("test", {
-      uid: interaction.uid,
-    });
+    await loginHandler(req, res, context);
   });
 
   app.post("/interaction/:uid/login", setNoCache, async (req, res) => {
@@ -69,5 +52,10 @@ export default async function routes(
   app.get("/metadata.xml", function (req, res) {
     res.type("application/xml");
     res.send(context.serviceProvider.create_metadata());
+  });
+
+  app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
+    console.error(err);
+    next(err);
   });
 }

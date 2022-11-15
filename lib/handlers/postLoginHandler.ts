@@ -37,7 +37,6 @@ export default async function postLoginHandler(
 
         const nameId = saml_response.user.name_id;
         const sessionIndex = saml_response.user.session_index;
-        console.log(saml_response.user);
         req.session.samlLogin = {
           nameId,
           sessionIndex,
@@ -56,10 +55,6 @@ export async function loginHandler(
   res: Response,
   context: IContext
 ): Promise<void> {
-  console.log("before");
-  const interaction = await context.provider.interactionDetails(req, res);
-  console.log("after");
-  console.log(interaction.session);
   if (
     !req.session.samlLogin ||
     !req.session.samlLogin.shouldHandleOidcRedirect
@@ -76,7 +71,9 @@ export async function loginHandler(
     req,
     res,
     {
-      accountId: req.session.samlLogin.nameId,
+      login: {
+        accountId: req.session.samlLogin.nameId,
+      },
     },
     { mergeWithLastSubmission: false }
   );

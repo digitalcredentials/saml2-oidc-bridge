@@ -14,7 +14,7 @@ export default interface IConfiguration {
     })[];
   };
   oidc: {
-    clients: ClientMetadata[];
+    clients: (ClientMetadata & { allowedOrigins: string[] })[];
     cookieKeys: string[];
     jwks: JWKS;
   };

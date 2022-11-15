@@ -20,19 +20,17 @@ export default class OidcAccount implements Account {
    *   or not return them in id tokens but only userinfo and so on.
    */
   async claims() {
-    // eslint-disable-line no-unused-vars
     if (this.profile) {
       return {
         sub: this.accountId, // it is essential to always return a sub claim
-        // email: this.profile.email,
+        email: "exampleEmail@example.com",
         // email_verified: this.profile.email_verified,
-        // family_name: this.profile.family_name,
-        // given_name: this.profile.given_name,
+        family_name: "Morgan",
+        given_name: "Jackson",
         // locale: this.profile.locale,
         // name: this.profile.name,
       };
     }
-
     return {
       sub: this.accountId, // it is essential to always return a sub claim
 

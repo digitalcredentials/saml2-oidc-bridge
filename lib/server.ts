@@ -55,10 +55,7 @@ export async function startServer(inputOptions: StartServerOptions) {
   app.use(morganMiddleware);
 
   routes(app, context);
-  const callback = context.provider.callback()
-  app.use((req, res) => {
-    callback(req, res);
-  });
+  app.use(context.provider.callback());
 
   app.listen(config.port, () => {
     console.log(
