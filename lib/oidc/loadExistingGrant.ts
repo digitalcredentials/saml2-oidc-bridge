@@ -22,8 +22,6 @@ export async function loadExistingGrant(ctx: KoaContextWithOIDC) {
 
   const scopes = (ctx.oidc.params?.scope as string)?.split(" ") || "";
 
-  console.log("scopes");
-  console.log(scopes);
   scopes.forEach((scope) => {
     grant.addOIDCScope(scope);
   });
