@@ -39,10 +39,7 @@ export default async function postLoginHandler(
 
         const nameId = saml_response.user.name_id;
         const sessionIndex = saml_response.user.session_index;
-<<<<<<< HEAD
 
-=======
->>>>>>> 1b98206 (Login works)
         req.session.samlLogin = {
           nameId,
           sessionIndex,
