@@ -26,7 +26,6 @@ export async function loadExistingGrant(ctx: KoaContextWithOIDC) {
     grant.addOIDCScope(scope);
   });
 
-  // TODO: Use ttl.Grant
   await grant.save(3600);
 
   return grant;
