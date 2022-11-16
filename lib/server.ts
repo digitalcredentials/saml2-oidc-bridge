@@ -36,7 +36,7 @@ export async function startServer(inputOptions: StartServerOptions) {
   app.use(
     session({
       proxy: true,
-      secret: "some secret TODO Replace",
+      secret: context.config.oidc.cookieKeys,
       resave: false,
       saveUninitialized: true,
       cookie: { secure: true },
