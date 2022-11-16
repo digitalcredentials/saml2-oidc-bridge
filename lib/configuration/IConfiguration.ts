@@ -18,4 +18,9 @@ export default interface IConfiguration {
     cookieKeys: string[];
     jwks: JWKS;
   };
+  redis: {
+    port: number;
+    host: string;
+    prefix: string;
+  };
 }

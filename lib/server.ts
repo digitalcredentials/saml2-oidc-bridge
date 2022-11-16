@@ -7,6 +7,7 @@ import createContext from "./configuration/createContext";
 import getConfigurationFromFile from "./configuration/getConfigurationFromFile";
 import routes from "./routes";
 import logger from "./util/logger";
+import { connectRedis } from "./oidc/redisOidcAdapter";
 
 interface StartServerOptions {
   config: string;
@@ -16,6 +17,7 @@ export async function startServer(inputOptions: StartServerOptions) {
   const app = express();
   const config = await getConfigurationFromFile(inputOptions.config);
   const context = createContext(config);
+  connectRedis(context.config);
 
   app.enable("trust proxy");
 
@@ -34,7 +36,7 @@ export async function startServer(inputOptions: StartServerOptions) {
   app.use(
     session({
       proxy: true,
-      secret: "some secret TODO Replace",
+      secret: context.config.oidc.cookieKeys,
       resave: false,
       saveUninitialized: true,
       cookie: { secure: true },

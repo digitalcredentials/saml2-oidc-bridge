@@ -2,9 +2,15 @@ import Redis from "ioredis";
 import isEmpty from "lodash/isEmpty";
 import { Adapter, AdapterPayload } from "oidc-provider";
 import { IOidcClaims } from "../util/samlResultToOidcClaim";
+import IConfiguration from "../configuration/IConfiguration";
 
-// TODO: Make this in config
-export const client = new Redis(6379, "127.0.0.1", { keyPrefix: "oidc:" });
+let client: Redis;
+
+export function connectRedis(config: IConfiguration) {
+  client = new Redis(config.redis.port, config.redis.host, {
+    keyPrefix: config.redis.prefix,
+  });
+}
 
 const grantable = new Set([
   "AccessToken",
@@ -52,7 +58,6 @@ export default class RedisAdapter implements Adapter {
 
     const multi = client.multi();
     if (consumable.has(this.name)) {
-      // TODO check if these are okay
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       multi.hmset(key, store);
