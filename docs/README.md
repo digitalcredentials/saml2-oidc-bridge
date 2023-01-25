@@ -127,5 +127,26 @@ Assuming all files are in the same folder, you can run the server by running
 saml2-oidc-bridge start -c config.json
 ```
 
+## Using the bridge
+
+Once the bridge is deployed and configured, OIDC-compatible applications can send requests to log in with configured SAML services. Note a few caveats:
+ - OIDC requests MUST use PKCE.
+ - The `profile` scope can be provided in addition to the `openid` scope if you want an ID Token with some profile information. Note that all profile information under OIDC cannot be provided as there is an insufficient overlap between OIDC and SAML.
+ - A `provider` query parameter can be added. This will cause the saml2-oidc-bridge to skip the provider selection UI and go directly to the specified provider. The value of the `provider` param corresponds to the configuration at `saml.idps[*].name`.
+
+An example request could look like:
+```
+https://saml.dcconsortium.org/auth?
+  client_id=some-client-id&
+  redirect_uri=https%3A%2F%2Foidcdebugger.com%2Fdebug&
+  scope=openid%20profile&
+  response_type=code&
+  response_mode=form_post&
+  code_challenge_method=S256&
+  code_challenge=_UxY46vb_MnzT4OACEZS18ptTRMknEvGg2OfgT5V-IA&
+  state=iben3lqhdg&nonce=uxx9q08zxu&
+  provider=example-saml-idp
+```
+
 ## Liscense
 MIT
