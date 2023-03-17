@@ -21,19 +21,26 @@ export default async function postLoginHandler(
   }
 
   // Perform an asserv
-  const options = { request_body: req.body };
-  return new Promise<void>((resolve) => {
+  const options = {
+    request_body: req.body,
+    require_session_index: false,
+  };
+  return new Promise<void>((resolve, reject) => {
     context.serviceProvider.post_assert(
       idp,
       options,
       async (err, saml_response) => {
         // Finish the interaction with an error if there is an error
         if (err != null) {
-          await context.provider.interactionFinished(req, res, {
-            error: "access_denied",
-            error_description: err.message,
-          });
-          resolve();
+          try {
+            await context.provider.interactionFinished(req, res, {
+              error: "access_denied",
+              error_description: err.message,
+            });
+            resolve();
+          } catch {
+            reject(err);
+          }
           return;
         }
 
