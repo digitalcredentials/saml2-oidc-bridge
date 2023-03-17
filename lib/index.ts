@@ -6,7 +6,7 @@ import { startServer } from "./server";
 program
   .name("saml2-oidc-bridge")
   .description("A server that connects OIDC applications to saml IDPs")
-  .version("0.0.1");
+  .version("1.0.4");
 
 program
   .command("start")

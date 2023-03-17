@@ -1,6 +1,6 @@
 {
   "name": "saml2-oidc-bridge",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A bridge from Saml2 systems to log into OIDC systems",
   "main": "./dist/index.js",
   "bin": {

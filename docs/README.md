@@ -4,7 +4,11 @@ saml2-oidc-bridge / [Exports](modules.md)
 
 A server the allows OIDC applications to work with SAML identity providers.
 
+![Diagram of the SAML2-OIDC-Bridge serving as an intermediary between an OIDC Client and a SAML Auth server](./bridge-diagram.png)
+
 ## Setup
+
+See the [setup tutorial](./tutorial.md) for a more in-depth description of setting up the server.
 
 ### Step 1: Download the library
 
