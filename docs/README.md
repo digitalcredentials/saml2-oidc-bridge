@@ -1,12 +1,10 @@
+saml2-oidc-bridge / [Exports](modules.md)
+
 # saml2-oidc-bridge
 
 A server the allows OIDC applications to work with SAML identity providers.
 
-![Diagram of the SAML2-OIDC-Bridge serving as an intermediary between an OIDC Client and a SAML Auth server](./bridge-diagram.png)
-
 ## Setup
-
-See the [setup tutorial](./tutorial.md) for a more in-depth description of setting up the server.
 
 ### Step 1: Download the library
 
@@ -37,7 +35,6 @@ openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout saml-client-ke
 ```
 
 This should generate two files. `saml-client-key.pem` (the private key) and `saml-client-cert.pem` (the public key).
-
 
 #### SAML IDP Public Keys
 
