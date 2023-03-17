@@ -298,7 +298,7 @@ npm install -g pm2
 Now start the application:
 
 ```bash
-pm2 start saml2-oidc-bridge -- -c config.json
+pm2 start saml2-oidc-bridge -- start -c config.json
 ```
 
 If you run `pm2 list` you should now see your app running.
